@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 5000;
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
@@ -16,9 +16,9 @@ app.get("/users", function (req, res) {
   res.send(users);
 });
 
-app.get("/users/:name", (req, res) => {
-  const user = details.find((u) => u.name === req.params.name);
-  res.send(req.params.name);
+app.get("/users/:id", (req, res) => {
+  const user = users.find((u) => u.id == req.params.id);
+  res.send(user);
   if (user) return res.send(user);
   res.status(404).send("sorry, not found");
 });
