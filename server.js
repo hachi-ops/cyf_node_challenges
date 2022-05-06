@@ -7,11 +7,18 @@ const PORT = 3000;
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 app.get("/", function (req, res) {
-  res.send("Hello World!");
+  res.send("Hello!");
 });
 
-const details = require("./lists.json");
+const users = require("./lists.json");
 
-app.get("/details", function (request, response) {
-  response.json(details);
+app.get("/users", function (req, res) {
+  res.send(users);
+});
+
+app.get("/users/:name", (req, res) => {
+  const user = details.find((u) => u.name === req.params.name);
+  res.send(req.params.name);
+  if (user) return res.send(user);
+  res.status(404).send("sorry, not found");
 });
