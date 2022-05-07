@@ -2,7 +2,9 @@ const express = require("express");
 
 const app = express();
 
-const PORT = 5000;
+app.use(express.json());
+
+const PORT = 4000;
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
@@ -21,4 +23,10 @@ app.get("/users/:id", (req, res) => {
   res.send(user);
   if (user) return res.send(user);
   res.status(404).send("sorry, not found");
+});
+
+app.post("/names", (req, res) => {
+  console.log("POST /names route");
+  // console.log(req.body);
+  // res.send();
 });
