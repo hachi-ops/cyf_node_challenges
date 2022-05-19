@@ -111,8 +111,8 @@
 // See the later spoiler section "Correct Routes" if you are not sure of the correct routes.
 const express = require("express");
 const cors = require("cors");
-
-// const bodyParser = require("body-parser");
+// const moment = require("moment");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -120,7 +120,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(moment());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //Use this array as your (in-memory) data store.
 const bookings = require("./bookings.json");
@@ -130,10 +131,6 @@ app.get("/", function (request, response) {
 });
 
 // TODO add your routes and helper functions here
-
-const listener = app.listen(PORT, function () {
-  console.log("Your app is listening on port " + listener.address().port);
-});
 
 //read all bookings
 app.get("/bookings", (req, res) => {
@@ -154,18 +151,25 @@ app.get("/bookings/:id", (req, res) => {
   res.send(findBooking(req.params.id));
 });
 
-// app.post("/bookings", (req, res) => {
-//   let newBooking = {
-//     id: bookings.length + 1,
-//     title: req.body.title,
-//     // firstName: req.body,
-//     // surname: req.body,
-//     // email: req.body,
-//     // roomId: req.body,
-//     // checkInDate,
-//     // checkOutDate,
-//   };
+app.post("/bookings", (req, res) => {
+  // const { id, firstName, surname } = req.body;
 
-//   bookings.push(newBooking);
-//   res.send(bookings);
-// });
+  let newBooking = {
+    id: bookings.length + 1,
+    title: req.body.title,
+    firstName: req.body.firstName,
+    surname: req.body.surname,
+    // email: req.body,
+  };
+
+  if (!req.body.firstName || !req.body.surname) {
+    res.status(400).json({ msg: "Fill in the missing fields" });
+  } else {
+    bookings.push(newBooking);
+    res.json(bookings);
+  }
+});
+
+const listener = app.listen(PORT, function () {
+  console.log("Your app is listening on port " + listener.address().port);
+});
