@@ -1,14 +1,3 @@
-// ### Testing
-
-// You should use the app "postman" to test creating and deleting bookings.
-
-// You can also try with this ALPHA-version [hotel tester app: https://cyf-hotel-tester.netlify.com/](https://cyf-hotel-tester.netlify.com/).
-
-// - Note that you'll have to click `set API` and enter your own base URL (e.g. https://alisina-hotel-server.glitch.me)
-// - Do not rely on this app for your testing. Be sure to check the javascript console if it misbehaves.
-
-// ## Data model
-
 // Each booking is an object with the following properties:
 
 // | Name         | Type   | Example           |
@@ -37,10 +26,6 @@
 // - [ ] Check that it is working by making a request to `/`
 // - [ ] Take time to read the comments
 // - [ ] Copy the code you've written to Glitch
-
-// # Go ahead!
-
-// If you think you know how to do that, go ahead!
 
 // Try to use what you know to do this challenge on your own. It does not require any new knowledge.
 
@@ -127,10 +112,15 @@
 const express = require("express");
 const cors = require("cors");
 
+// const bodyParser = require("body-parser");
+
 const app = express();
+
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 //Use this array as your (in-memory) data store.
 const bookings = require("./bookings.json");
@@ -139,12 +129,43 @@ app.get("/", function (request, response) {
   response.send("Hotel booking server.  Ask for /bookings, etc.");
 });
 
-app.post("/bookings", function (req, res) {
-  res.send;
-});
-
 // TODO add your routes and helper functions here
 
-const listener = app.listen(process.env.PORT, function () {
+const listener = app.listen(PORT, function () {
   console.log("Your app is listening on port " + listener.address().port);
 });
+
+//read all bookings
+app.get("/bookings", (req, res) => {
+  res.send(bookings);
+});
+
+const findBooking = (id) =>
+  bookings.find((booking) => booking.id === Number(id));
+
+app.get("/bookings/:id", (req, res) => {
+  if (findBooking(req.params.id)) {
+    findBooking(req.params.id);
+  } else {
+    res
+      .status(400)
+      .json({ msg: `This booking ${req.params.id}  does not exist` });
+  }
+  res.send(findBooking(req.params.id));
+});
+
+// app.post("/bookings", (req, res) => {
+//   let newBooking = {
+//     id: bookings.length + 1,
+//     title: req.body.title,
+//     // firstName: req.body,
+//     // surname: req.body,
+//     // email: req.body,
+//     // roomId: req.body,
+//     // checkInDate,
+//     // checkOutDate,
+//   };
+
+//   bookings.push(newBooking);
+//   res.send(bookings);
+// });
