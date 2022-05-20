@@ -150,14 +150,18 @@ app.post("/bookings", (req, res) => {
     title: req.body.title,
     firstName: req.body.firstName,
     surname: req.body.surname,
-    // email: req.body.email,
+    email: req.body.email,
+    checkInDate: req.body.checkInDate,
+    checkOutDate: req.body.checkOutDate,
   };
 
   if (
     !newBooking.title ||
     !newBooking.firstName ||
-    !newBooking.surname
-    // !req.body.email
+    !newBooking.surname ||
+    !req.body.email ||
+    !checkInDate ||
+    !checkOutDate
   ) {
     res.status(400).json({ msg: "Fill in the missing fields" });
   } else {
