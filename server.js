@@ -27,16 +27,6 @@
 // - [ ] Take time to read the comments
 // - [ ] Copy the code you've written to Glitch
 
-// Try to use what you know to do this challenge on your own. It does not require any new knowledge.
-
-// You may find useful the [express cheatsheet](https://github.com/nbogie/express-notes/blob/master/express-cheatsheet.md)
-
-// # End of Level 1 challenge!
-
-// Well done!
-
-// What to do now:
-
 // Don't post on slack, unless there's a thread announced specifically for it.
 // Instead, attach the URLs as links when you "mark done" your assignment in Google Classroom.
 // You might want to download your project for safekeeping. (Tools: Git, Import, and Export: Download Project)
@@ -121,6 +111,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 // app.use(moment());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //Use this array as your (in-memory) data store.
@@ -145,7 +136,7 @@ app.get("/bookings/:id", (req, res) => {
     findBooking(req.params.id);
   } else {
     res
-      .status(400)
+      .status(404)
       .json({ msg: `This booking ${req.params.id}  does not exist` });
   }
   res.send(findBooking(req.params.id));
@@ -159,14 +150,38 @@ app.post("/bookings", (req, res) => {
     title: req.body.title,
     firstName: req.body.firstName,
     surname: req.body.surname,
-    // email: req.body,
+    // email: req.body.email,
   };
 
-  if (!req.body.firstName || !req.body.surname) {
+  if (
+    !newBooking.title ||
+    !newBooking.firstName ||
+    !newBooking.surname
+    // !req.body.email
+  ) {
     res.status(400).json({ msg: "Fill in the missing fields" });
   } else {
     bookings.push(newBooking);
     res.json(bookings);
+  }
+});
+
+app.delete("/bookings/:id", (req, res) => {
+  const found = bookings.some(
+    (booking) => booking.id === parseInt(req.params.id)
+  );
+
+  if (found) {
+    res.json({
+      msg: `Member deleted`,
+      bookings: bookings.filter(
+        (booking) => booking.id !== parseInt(req.params.id)
+      ),
+    });
+  } else {
+    res.status(404).json({
+      msg: `The booking with the id ${req.params.id} cannot be found`,
+    });
   }
 });
 
